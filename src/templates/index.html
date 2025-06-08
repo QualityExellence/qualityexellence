@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quality Excellence</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1>Quality Excellence</h1>
+                <button id="sidebar-toggle-btn" class="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="active">
+                    <a href="#" data-page="upload">
+                        <i class="fas fa-upload"></i>
+                        <span>Upload e Transcrição</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-page="dashboard">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-page="transcriptions">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Transcrições</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-page="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <!-- <img src="/img/avatar.svg" alt="User Avatar" class="avatar"> -->
+                    <div class="user-details">
+                        <span class="user-name">Usuário</span>
+                        <span class="user-role">Operador</span>
+                    </div>
+                </div>
+
+                <button id="logout-button" class="btn btn-outline-danger">
+                    <i class="fas fa-sign-out-alt"></i>Sair
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-title">
+                    <h2 id="page-title">Upload e Transcrição</h2>
+                </div>
+                <div class="header-actions">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Buscar...">
+                    </div>
+                    <div class="notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Pages -->
+            <div class="content-container">
+                <!-- Upload Page -->
+                <div class="content-page active" id="upload-page">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Upload de Arquivo</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="upload-container">
+                                <div class="upload-area" id="upload-area">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Arraste e solte arquivos aqui ou</p>
+                                    <button class="btn btn-primary" id="select-file-btn">Selecionar Arquivo</button>
+                                    <input type="file" id="file-input" accept=".mp3,.mp4,.wav,.webm" hidden>
+                                    <p class="upload-info">Formatos suportados: .mp3, .mp4, .wav, .webm</p>
+                                </div>
+                                <div class="upload-progress" id="upload-progress" style="display: none;">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 0%"></div>
+                                    </div>
+                                    <p class="progress-text">0%</p>
+                                    <p class="file-name">arquivo.mp3</p>
+                                    <button class="btn btn-danger btn-sm" id="cancel-upload-btn">Cancelar</button>
+                                </div>
+                                <div class="upload-success" id="upload-success" style="display: none;">
+                                    <i class="fas fa-check-circle"></i>
+                                    <p>Upload concluído com sucesso!</p>
+                                    <p class="file-name">arquivo.mp3</p>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-primary" id="transcribe-btn">Transcrever Agora</button>
+                                        <button class="btn btn-outline" id="upload-another-btn">Enviar Outro</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Importar da 4COM</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="import-container">
+                                <div class="form-group">
+                                    <label for="start-date">Data Inicial</label>
+                                    <input type="date" id="start-date" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="end-date">Data Final</label>
+                                    <input type="date" id="end-date" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="operator-filter">Operador</label>
+                                    <select id="operator-filter" class="form-control">
+                                        <option value="">Todos</option>
+                                        <option value="1">Operador 1</option>
+                                        <option value="2">Operador 2</option>
+                                        <option value="3">Operador 3</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary" id="import-btn">Importar Gravações</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Gravações Recentes</h3>
+                            <div class="card-actions">
+                                <select id="status-filter" class="form-control form-control-sm">
+                                    <option value="">Todos os Status</option>
+                                    <option value="pending">Pendente</option>
+                                    <option value="processing">Processando</option>
+                                    <option value="completed">Concluído</option>
+                                    <option value="error">Erro</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Título</th>
+                                            <th>Data</th>
+                                            <th>Tipo</th>
+                                            <th>Status</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recordings-table">
+                                        <tr>
+                                            <td>Atendimento Cliente 1</td>
+                                            <td>18/05/2025 14:30</td>
+                                            <td>mp3</td>
+                                            <td><span class="badge badge-success">Concluído</span></td>
+                                            <td>
+                                                <button class="btn btn-icon btn-sm" title="Ver Transcrição">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn btn-icon btn-sm" title="Baixar">
+                                                    <i class="fas fa-download"></i>
+                                                </button>
+                                                <button class="btn btn-icon btn-sm btn-danger" title="Excluir">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Atendimento Cliente 2</td>
+                                            <td>17/05/2025 10:15</td>
+                                            <td>mp4</td>
+                                            <td><span class="badge badge-warning">Processando</span></td>
+                                            <td>
+                                                <button class="btn btn-icon btn-sm" title="Ver Transcrição" disabled>
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn btn-icon btn-sm" title="Baixar">
+                                                    <i class="fas fa-download"></i>
+                                                </button>
+                                                <button class="btn btn-icon btn-sm btn-danger" title="Excluir">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Atendimento Cliente 3</td>
+                                            <td>16/05/2025 16:45</td>
+                                            <td>wav</td>
+                                            <td><span class="badge badge-danger">Erro</span></td>
+                                            <td>
+                                                <button class="btn btn-icon btn-sm" title="Ver Transcrição" disabled>
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn btn-icon btn-sm" title="Baixar">
+                                                    <i class="fas fa-download"></i>
+                                                </button>
+                                                <button class="btn btn-icon btn-sm btn-danger" title="Excluir">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="pagination">
+                                <button class="btn btn-sm btn-outline" disabled>Anterior</button>
+                                <span>Página 1 de 3</span>
+                                <button class="btn btn-sm btn-outline">Próxima</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Page -->
+                <div class="content-page" id="dashboard-page">
+                    <div class="dashboard-filters">
+                        <div class="form-group">
+                            <label for="dashboard-start-date">Data Inicial</label>
+                            <input type="date" id="dashboard-start-date" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="dashboard-end-date">Data Final</label>
+                            <input type="date" id="dashboard-end-date" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="dashboard-operator">Operador</label>
+                            <select id="dashboard-operator" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="1">Operador 1</option>
+                                <option value="2">Operador 2</option>
+                                <option value="3">Operador 3</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dashboard-sentiment">Sentimento</label>
+                            <select id="dashboard-sentiment" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="positive">Positivo</option>
+                                <option value="neutral">Neutro</option>
+                                <option value="negative">Negativo</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" id="apply-filters-btn">Aplicar Filtros</button>
+                        <button class="btn btn-outline" id="export-dashboard-btn">
+                            <i class="fas fa-download"></i> Exportar
+                        </button>
+                    </div>
+
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>Total de Chamadas</h4>
+                                <p class="stat-value">128</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>TMA Médio</h4>
+                                <p class="stat-value">5:23</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-smile"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>Sentimento Médio</h4>
+                                <p class="stat-value">0.65</p>
+                                <div class="sentiment-indicator positive"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>Momentos Críticos</h4>
+                                <p class="stat-value">12</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-charts">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Chamadas por Dia</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="calls-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Distribuição de Sentimento</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="sentiment-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Top 10 Palavras</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="keywords-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Desempenho por Operador</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="operators-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Transcrições Recentes</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Título</th>
+                                            <th>Operador</th>
+                                            <th>Data</th>
+                                            <th>TMA</th>
+                                            <th>Sentimento</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="transcriptions-table">
+                                        <tr>
+                                            <td>Atendimento Cliente 1</td>
+                                            <td>Operador 1</td>
+                                            <td>18/05/2025</td>
+                                            <td>4:32</td>
+                                            <td>
+                                                <div class="sentiment-indicator positive"></div>
+                                                Positivo
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-icon btn-sm" title="Ver Detalhes">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn btn-icon btn-sm" title="Exportar PDF">
+                                                    <i class="fas fa-file-pdf"></i>
+                                                </button>
+                                                <button class="btn btn-icon btn-sm" title="Exportar CSV">
+                                                    <i class="fas fa-file-csv"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Atendimento Cliente 2</td>
+                                            <td>Operador 2</td>
+                                            <td>17/05/2025</td>
+                                            <td>6:15</td>
+                                            <td>
+                                                <div class="sentiment-indicator neutral"></div>
+                                                Neutro
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-icon btn-sm" title="Ver Detalhes">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn btn-icon btn-sm" title="Exportar PDF">
+                                                    <i class="fas fa-file-pdf"></i>
+                                                </button>
+                                                <button class="btn btn-icon btn-sm" title="Exportar CSV">
+                                                    <i class="fas fa-file-csv"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Atendimento Cliente 3</td>
+                                            <td>Operador 3</td>
+                                            <td>16/05/2025</td>
+                                            <td>3:45</td>
+                                            <td>
+                                                <div class="sentiment-indicator negative"></div>
+                                                Negativo
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-icon btn-sm" title="Ver Detalhes">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn btn-icon btn-sm" title="Exportar PDF">
+                                                    <i class="fas fa-file-pdf"></i>
+                                                </button>
+                                                <button class="btn btn-icon btn-sm" title="Exportar CSV">
+                                                    <i class="fas fa-file-csv"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transcriptions Page -->
+                <div class="content-page" id="transcriptions-page">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Transcrições</h3>
+                            <div class="card-actions">
+                                <div class="search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" placeholder="Buscar transcrição...">
+                                </div>
+                                <select id="transcription-filter" class="form-control form-control-sm">
+                                    <option value="">Todos os Sentimentos</option>
+                                    <option value="positive">Positivo</option>
+                                    <option value="neutral">Neutro</option>
+                                    <option value="negative">Negativo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Título</th>
+                                            <th>Data</th>
+                                            <th>Duração</th>
+                                            <th>Sentimento</th>
+                                            <th>Palavras-chave</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="all-transcriptions-table">
+                                        <tr>
+                                            <td>Atendimento Cliente 1</td>
+                                            <td>18/05/2025</td>
+                                            <td>4:32</td>
+                                            <td>
+                                                <div class="sentiment-indicator positive"></div>
+                                                Positivo
+                                            </td>
+                                            <td>
+                                                <div class="keywords-list">
+                                                    <span class="keyword">internet</span>
+                                                    <span class="keyword">problema</span>
+                                                    <span class="keyword">solução</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-primary btn-sm view-transcription-btn" data-id="1">
+                                                    Ver Detalhes
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Atendimento Cliente 2</td>
+                                            <td>17/05/2025</td>
+                                            <td>6:15</td>
+                                            <td>
+                                                <div class="sentiment-indicator neutral"></div>
+                                                Neutro
+                                            </td>
+                                            <td>
+                                                <div class="keywords-list">
+                                                    <span class="keyword">fatura</span>
+                                                    <span class="keyword">pagamento</span>
+                                                    <span class="keyword">vencimento</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-primary btn-sm view-transcription-btn" data-id="2">
+                                                    Ver Detalhes
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Atendimento Cliente 3</td>
+                                            <td>16/05/2025</td>
+                                            <td>3:45</td>
+                                            <td>
+                                                <div class="sentiment-indicator negative"></div>
+                                                Negativo
+                                            </td>
+                                            <td>
+                                                <div class="keywords-list">
+                                                    <span class="keyword">cancelamento</span>
+                                                    <span class="keyword">insatisfação</span>
+                                                    <span class="keyword">demora</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-primary btn-sm view-transcription-btn" data-id="3">
+                                                    Ver Detalhes
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="pagination">
+                                <button class="btn btn-sm btn-outline" disabled>Anterior</button>
+                                <span>Página 1 de 5</span>
+                                <button class="btn btn-sm btn-outline">Próxima</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Page -->
+                <div class="content-page" id="settings-page">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Configurações da Conta</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="profile-form">
+                                <div class="form-group">
+                                    <label for="user-name">Nome</label>
+                                    <input type="text" id="user-name" class="form-control" value="Usuário">
+                                </div>
+                                <div class="form-group">
+                                    <label for="user-email">Email</label>
+                                    <input type="email" id="user-email" class="form-control" value="usuario@exemplo.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="user-password">Nova Senha</label>
+                                    <input type="password" id="user-password" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="user-password-confirm">Confirmar Nova Senha</label>
+                                    <input type="password" id="user-password-confirm" class="form-control">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Configurações de API</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="api-form">
+                                <div class="form-group">
+                                    <label for="4com-api-key">Chave da API 4COM</label>
+                                    <input type="text" id="4com-api-key" class="form-control" value="••••••••••••••••">
+                                </div>
+                                <div class="form-group">
+                                    <label for="4com-api-url">URL da API 4COM</label>
+                                    <input type="text" id="4com-api-url" class="form-control" value="https://api.4com.example">
+                                </div>
+                                <div class="form-group">
+                                    <label for="openai-api-key">Chave da API OpenAI</label>
+                                    <input type="text" id="openai-api-key" class="form-control" value="••••••••••••••••">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Salvar Configurações</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Preferências do Sistema</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="preferences-form">
+                                <div class="form-group">
+                                    <label for="language-preference">Idioma Padrão</label>
+                                    <select id="language-preference" class="form-control">
+                                        <option value="pt-BR" selected>Português (Brasil)</option>
+                                        <option value="en-US">Inglês (EUA)</option>
+                                        <option value="es-ES">Espanhol</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="theme-preference">Tema</label>
+                                    <select id="theme-preference" class="form-control">
+                                        <option value="light" selected>Claro</option>
+                                        <option value="dark">Escuro</option>
+                                        <option value="system">Sistema</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="notifications-preference" checked>
+                                        Receber notificações
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="auto-transcribe-preference" checked>
+                                        Transcrever automaticamente após upload
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Salvar Preferências</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Transcription Detail Modal -->
+        <div class="modal" id="transcription-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Detalhes da Transcrição</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="transcription-header">
+                        <h4 id="transcription-title">Atendimento Cliente 1</h4>
+                        <div class="transcription-meta">
+                            <span><i class="fas fa-calendar"></i> <span id="transcription-date">18/05/2025</span></span>
+                            <span><i class="fas fa-clock"></i> <span id="transcription-duration">4:32</span></span>
+                            <span><i class="fas fa-user"></i> <span id="transcription-operator">Operador 1</span></span>
+                        </div>
+                    </div>
+
+                    <div class="transcription-summary">
+                        <h5>Resumo</h5>
+                        <p id="transcription-summary-text">
+                            Cliente relatou problemas com a internet. Foi identificada uma instabilidade na região e o problema foi registrado com prioridade. Cliente foi informado que o serviço seria normalizado até o final do dia.
+                        </p>
+                    </div>
+
+                    <div class="transcription-sentiment">
+                        <h5>Análise de Sentimento</h5>
+                        <div class="sentiment-score">
+                            <div class="sentiment-meter">
+                                <div class="sentiment-indicator" id="sentiment-indicator" style="left: 75%"></div>
+                            </div>
+                            <div class="sentiment-labels">
+                                <span>Negativo</span>
+                                <span>Neutro</span>
+                                <span>Positivo</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="transcription-keywords">
+                        <h5>Palavras-chave</h5>
+                        <div class="keywords-cloud" id="keywords-cloud">
+                            <span class="keyword" style="font-size: 1.4em">internet (5)</span>
+                            <span class="keyword" style="font-size: 1.2em">problema (3)</span>
+                            <span class="keyword" style="font-size: 1.1em">solução (2)</span>
+                            <span class="keyword">instabilidade (1)</span>
+                            <span class="keyword">prioridade (1)</span>
+                        </div>
+                    </div>
+
+                    <div class="transcription-content">
+                        <h5>Transcrição Completa</h5>
+                        <div class="transcription-segments" id="transcription-segments">
+                            <div class="segment">
+                                <div class="segment-header">
+                                    <span class="speaker atendente">Atendente</span>
+                                    <span class="timestamp">00:00 - 00:05</span>
+                                    <span class="sentiment positive">Positivo</span>
+                                </div>
+                                <div class="segment-text">
+                                    Olá, bom dia. Meu nome é Carlos, como posso ajudar?
+                                </div>
+                            </div>
+                            <div class="segment">
+                                <div class="segment-header">
+                                    <span class="speaker cliente">Cliente</span>
+                                    <span class="timestamp">00:05 - 00:12</span>
+                                    <span class="sentiment negative">Negativo</span>
+                                </div>
+                                <div class="segment-text">
+                                    Bom dia. Estou com um problema no meu serviço de internet. Está muito lento desde ontem.
+                                </div>
+                            </div>
+                            <div class="segment">
+                                <div class="segment-header">
+                                    <span class="speaker atendente">Atendente</span>
+                                    <span class="timestamp">00:13 - 00:22</span>
+                                    <span class="sentiment positive">Positivo</span>
+                                </div>
+                                <div class="segment-text">
+                                    Entendo sua frustração. Vamos verificar o que está acontecendo. Pode me informar o número do seu contrato ou CPF?
+                                </div>
+                            </div>
+                            <div class="segment">
+                                <div class="segment-header">
+                                    <span class="speaker cliente">Cliente</span>
+                                    <span class="timestamp">00:22 - 00:28</span>
+                                    <span class="sentiment neutral">Neutro</span>
+                                </div>
+                                <div class="segment-text">
+                                    Sim, o número do contrato é 12345678.
+                                </div>
+                            </div>
+                            <div class="segment">
+                                <div class="segment-header">
+                                    <span class="speaker atendente">Atendente</span>
+                                    <span class="timestamp">00:28 - 00:45</span>
+                                    <span class="sentiment positive">Positivo</span>
+                                </div>
+                                <div class="segment-text">
+                                    Obrigado. Estou verificando aqui no sistema. Realmente identificamos uma instabilidade na sua região. Nossa equipe técnica já está trabalhando para resolver o problema.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="transcription-actions">
+                        <button class="btn btn-primary" id="export-pdf-btn">
+                            <i class="fas fa-file-pdf"></i> Exportar PDF
+                        </button>
+                        <button class="btn btn-outline" id="export-csv-btn">
+                            <i class="fas fa-file-csv"></i> Exportar CSV
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--login-modal-->
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>
